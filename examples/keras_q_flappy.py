@@ -11,7 +11,6 @@ from keras.models import load_model
 from keras.optimizers import Adam
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import StandardScaler
-import xgboost as xgb
 
 import gym_traffic
 from gym.wrappers import Monitor
@@ -186,7 +185,7 @@ for i_episode in range(500):
         # observation, reward, done, info = env.step(action)
         #print "Reward: {}".format(reward)
         if done:
-            model.save('my_model_10000.h5')  # creates a HDF5 file 'my_model.h5'
+            model.save('my_model_final'+str(i_episode)+'.h5')  # creates a HDF5 file 'my_model.h5'
             # del model  # deletes the existing model
             print("Episode finished after {} timesteps".format(t+1))
             break

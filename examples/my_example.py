@@ -36,9 +36,9 @@ for i_episode in tqdm(range(500)):
         #     action = abs(prev_action-1)
         # prev_action = action
         o = observation
-        o = np.reshape(o[0], (1, 28))
-        minmax = MinMaxScaler()
-        minmax.fit(o)
+        o = np.reshape(o[0], (1, 36))
+        # minmax = MinMaxScaler()
+        # minmax.fit(o)
         # o = minmax.transform(o)
         preds = model.predict(o)
         action = np.argmax(preds)
