@@ -95,18 +95,19 @@ class TrafficEnv(Env):
         # for lane in self.lanes:
         #    reward -= traci.lane.getWaitingTime(lane)
         # return reward
-        # speed = traci.multientryexit.getLastStepMeanSpeed(self.detector)
-        # count = traci.multientryexit.getLastStepVehicleNumber(self.detector)
-        # reward = speed * count
+        speed = traci.multientryexit.getLastStepMeanSpeed(self.detector)
+        count = traci.multientryexit.getLastStepVehicleNumber(self.detector)
+        reward = speed * count
         # print("Speed: {}".format(traci.multientryexit.getLastStepMeanSpeed(self.detector)))
         # print("Count: {}".format(traci.multientryexit.getLastStepVehicleNumber(self.detector)))
         # reward = np.sqrt(speed)
         # print "Reward: {}".format(reward)
         # return speed
-        reward = 0.0
-        for loop in self.exitloops:
-           reward += traci.inductionloop.getLastStepVehicleNumber(loop)
-        return max(reward, 0)
+        # reward = 0.0
+        # for loop in self.exitloops:
+        #    reward += traci.inductionloop.getLastStepVehicleNumber(loop)
+        return reward
+        # return max(reward, 0)
 
     def _step(self, action):
         action = self.action_space(action)
@@ -132,9 +133,9 @@ class TrafficEnv(Env):
     def _observation(self):
         res = traci.inductionloop.getSubscriptionResults()
         obs = []
-        for loop in self.loops:
-            for var in self.loop_variables:
-                obs.append(res[loop][var])
+        # for loop in self.loops:
+        #     for var in self.loop_variables:
+        #         obs.append(res[loop][var])
         # obs = []
         for lane in self.lanes:
             obs.append(traci.lane.getLastStepHaltingNumber(lane))
