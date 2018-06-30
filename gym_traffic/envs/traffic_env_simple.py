@@ -19,7 +19,7 @@ class TrafficEnvSimple(TrafficEnv):
                                                lanes=lanes, exitloops=exitloops)
 
     def route_sample(self):
-        if self.np_random.uniform(0, 1) > 0.01:
+        if self.np_random.uniform(0, 1) > 0.2:
             ew = 0.8
             ns = 0.2
         else:

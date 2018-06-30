@@ -32,8 +32,8 @@ class TrafficEnv(Env):
         self._seed()
         self.loops = loops
         self.exitloops = exitloops
-        # self.loop_variables = [tc.LAST_STEP_MEAN_SPEED, tc.LAST_STEP_TIME_SINCE_DETECTION, tc.LAST_STEP_VEHICLE_NUMBER]
-        self.loop_variables = [tc.LAST_STEP_MEAN_SPEED]
+        self.loop_variables = [tc.LAST_STEP_MEAN_SPEED, tc.LAST_STEP_TIME_SINCE_DETECTION, tc.LAST_STEP_VEHICLE_NUMBER]
+        # self.loop_variables = [tc.LAST_STEP_MEAN_SPEED]
         self.lanes = lanes
         self.detector = detector
         args = ["--net-file", netfile, "--route-files", tmpfile, "--additional-files", addfile]
@@ -91,13 +91,15 @@ class TrafficEnv(Env):
             self.sumo_running = False
 
     def _reward(self):
-        # reward = 0.0
-        # for lane in self.lanes:
-        #    reward -= traci.lane.getWaitingTime(lane)
-        # return reward
-        speed = traci.multientryexit.getLastStepMeanSpeed(self.detector)
-        count = traci.multientryexit.getLastStepVehicleNumber(self.detector)
-        reward = speed * count
+        reward = 0.0
+        for lane in self.lanes:
+           reward -= traci.lane.getWaitingTime(lane)
+        if reward==0:
+            return 0
+        return 1/abs(reward)
+        # speed = traci.multientryexit.getLastStepMeanSpeed(self.detector)
+        # count = traci.multientryexit.getLastStepVehicleNumber(self.detector)
+        # reward = speed * count
         # print("Speed: {}".format(traci.multientryexit.getLastStepMeanSpeed(self.detector)))
         # print("Count: {}".format(traci.multientryexit.getLastStepVehicleNumber(self.detector)))
         # reward = np.sqrt(speed)
@@ -133,13 +135,13 @@ class TrafficEnv(Env):
     def _observation(self):
         res = traci.inductionloop.getSubscriptionResults()
         obs = []
-        # for loop in self.loops:
-        #     for var in self.loop_variables:
-        #         obs.append(res[loop][var])
+        for loop in self.loops:
+            for var in self.loop_variables:
+                obs.append(res[loop][var])
         # obs = []
-        for lane in self.lanes:
-            obs.append(traci.lane.getLastStepHaltingNumber(lane))
-            obs.append(traci.lane.getWaitingTime(lane))
+        # for lane in self.lanes:
+        #     obs.append(traci.lane.getLastStepHaltingNumber(lane))
+        #     obs.append(traci.lane.getWaitingTime(lane))
         # for vehicle_id in traci.vahicle.getIDList():
         #     sum_of
         # obs.append(traci.vehicle.getAccumulatedWaitingTime(vehicle_id))

@@ -23,28 +23,28 @@ monitor = False
 
 CONFIG = 'nothreshold'
 ACTIONS = 2  # number of valid actions
-GAMMA = 0.99  # decay rate of past observations
+GAMMA = 0.5  # decay rate of past observations
 OBSERVATION = 120  # timesteps to observe before training
 EXPLORE = 3000000.  # frames over which to anneal epsilon
 FINAL_EPSILON = 0.001  # final value of epsilon
 INITIAL_EPSILON = 0.1  # starting value of epsilon
-REPLAY_MEMORY = 200  # number of previous transitions to remember
-BATCH = 10  # size of minibatch
+REPLAY_MEMORY = 120  # number of previous transitions to remember
+BATCH = 60  # size of minibatch
 
 
 global model
 
-INPUT_DIM = 16
+INPUT_DIM = 36
 
 
 def buildmodel():
     print("Now we build the model")
     model = Sequential()
-    model.add(Dense(20, input_dim=INPUT_DIM, activation='relu'))
+    model.add(Dense(20, input_dim=INPUT_DIM, activation='tanh'))
     model.add(Dropout(0.5))
     # model.add(Dense(32, activation='relu'))
-    model.add(Dense(2, activation='relu'))
-    adam = Adam(lr=0.000005)
+    model.add(Dense(2, activation='tanh'))
+    adam = Adam(lr=0.005)
     model.compile(loss='binary_crossentropy', optimizer=adam)
     print("We finish building the model")
     return model
@@ -77,7 +77,7 @@ for i_episode in range(500):
     # minmax = StandardScaler()
     # observation = minmax.fit_transform(observation)
 
-    for t in range(10000):
+    for t in range(500):
 
         Q_sa = 0
         action_index = 0
@@ -100,7 +100,7 @@ for i_episode in range(500):
         action_index = np.round(max_Q.mean())
 
 
-        if t > OBSERVE and t % 1 == 0:
+        if t > OBSERVE and t % 30 == 0:
         # if t % 30 == 0:
             # sample a minibatch to train on
             minibatch = random.sample(D, BATCH)
@@ -127,14 +127,14 @@ for i_episode in range(500):
                 if done:
                     targets[i][0, action_index] = reward_t
                 else:
-                    targets[i] = reward_t / 4 + targets[i]
-                    targets[i][0, int(action_index)] = (1 - GAMMA) * reward_t * 3 / 4 + GAMMA * Q_sa[0][int(action_index)]
+                    # targets[i] = reward_t / 4 + targets[i]
+                    # targets[i][0, int(action_index)] = (1 - GAMMA) * reward_t * 3 / 4 + GAMMA * Q_sa[0][int(action_index)]
                     # targets[i][0, int(action_index)] = reward_t + GAMMA * np.max(Q_sa)
                     # targets[i] = reward_t / 2 + targets[i]
                     # targets[i][0, int(action_index)] = (1 - GAMMA) * reward_t * 1 / 2 + GAMMA * Q_sa[0][int(action_index)]
                     # targets[i][0, int(action_index)] = (1 - GAMMA) * reward_t * 1 / 2 + GAMMA * np.max(Q_sa[0][int(action_index)])
                     # targets[i][0,:] = (1 - GAMMA) * reward_t * 1 / 2 + GAMMA * Q_sa[0]
-                    # targets[i][0, int(action_index)] = reward_t + GAMMA * np.max(Q_sa)
+                    targets[i][0, int(action_index)] = reward_t + GAMMA * np.max(Q_sa)
 
             inputs = np.reshape(inputs, (inputs.shape[0] * inputs.shape[1], inputs.shape[2]))
             targets = np.reshape(targets, (targets.shape[0] * targets.shape[1], targets.shape[2]))

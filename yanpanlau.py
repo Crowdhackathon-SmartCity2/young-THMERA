@@ -66,31 +66,6 @@ def buildmodel():
     return model
 
 
-
-# def trainNetwork(model,args):
-#     # open up a game state to communicate with emulator
-#     # game_state = game.GameState()
-#
-#     # store the previous observations in replay memory
-#     D = deque()
-#
-#     # get the first state by doing nothing and preprocess the image to 80x80x4
-#     do_nothing = np.zeros(ACTIONS)
-#     do_nothing[0] = 1
-#     x_t, r_0, terminal = game_state.frame_step(do_nothing)
-#
-#     x_t = skimage.color.rgb2gray(x_t)
-#     x_t = skimage.transform.resize(x_t,(80,80))
-#     x_t = skimage.exposure.rescale_intensity(x_t,out_range=(0,255))
-#
-#     x_t = x_t / 255.0
-#
-#     s_t = np.stack((x_t, x_t, x_t, x_t), axis=2)
-#     #print (s_t.shape)
-#
-#     #In Keras, need to reshape
-#     s_t = s_t.reshape(1, s_t.shape[0], s_t.shape[1], s_t.shape[2])  #1*80*80*4
-
 monitor = True
 env = gym.make('Traffic-Simple-gui-v0')
 if monitor:
