@@ -60,7 +60,7 @@ if monitor:
 
 model = buildmodel()
 
-for i_episode in range(500):
+for i_episode in range(1000):
     observation = env.reset()
 
     D = deque()
@@ -76,7 +76,7 @@ for i_episode in range(500):
     # minmax = StandardScaler()
     # observation = minmax.fit_transform(observation)
 
-    for t in range(500):
+    for t in range(700):
 
         Q_sa = 0
         action_index = 0

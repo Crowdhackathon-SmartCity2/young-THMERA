@@ -20,7 +20,7 @@ import traci
 
 monitor = True
 env = gym.make('Traffic-Simple-gui-v0')
-model = load_model('my_model_10000.h5')
+model = load_model('my_model_final692.h5')
 if monitor:
     env = Monitor(env, "output/traffic/simple/random", force=True)
 for i_episode in tqdm(range(500)):
