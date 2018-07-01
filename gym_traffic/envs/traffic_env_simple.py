@@ -1,6 +1,9 @@
-from traffic_env import TrafficEnv
-from traffic_lights import TrafficLightTwoWay
+# from traffic_env import TrafficEnv
+# from traffic_lights import TrafficLightTwoWay
 import os
+
+from gym_traffic.envs import TrafficEnv
+from gym_traffic.envs.traffic_lights import TrafficLightTwoWay
 
 
 class TrafficEnvSimple(TrafficEnv):
@@ -20,7 +23,7 @@ class TrafficEnvSimple(TrafficEnv):
 
     def route_sample(self):
         if self.np_random.uniform(0, 1) > 0.1:
-            ew = 0.6
+            ew = 0.8
             ns = 0.2
         else:
             ns = 0.01
